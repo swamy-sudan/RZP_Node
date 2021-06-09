@@ -8,7 +8,7 @@
 var orderId ;
 $(document).ready(function(){
     var settings = {
-  "url": "http://localhost:3000/create/orderId",
+  "url": "/create/orderId",
   "method": "POST",
   "timeout": 0,
   "headers": {
@@ -42,6 +42,26 @@ document.getElementById('rzp-button1').onclick = function(e){
         alert(response.razorpay_payment_id);
         alert(response.razorpay_order_id);
         alert(response.razorpay_signature)
+
+        //call signature validate method
+
+
+        var settings = {
+  "url": "/api/payment/verify",
+  "method": "POST",
+  "timeout": 0,
+  "headers": {
+    "Content-Type": "application/json"
+  },
+  "data": JSON.stringify({response}),
+};
+
+//creates new orderId everytime
+$.ajax(settings).done(function (response) {
+
+ alert(JSON.stringify(response));
+});
+
     },
     "prefill": {
         "name": "Gaurav Kumar",
