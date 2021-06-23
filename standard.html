@@ -1,11 +1,14 @@
 <!-- Generate orderId onLoad -->
-
-<button id="rzp-button1">Pay</button>
+<h5>Pay button will appear once orderId is generated</h5>
+<button class="button" id="rzp-button1">Pay</button>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script>
 
 var orderId ;
+
+$("button").hide();
+
 $(document).ready(function(){
     var settings = {
   "url": "/create/orderId",
@@ -24,6 +27,7 @@ $.ajax(settings).done(function (response) {
 
   orderId=response.orderId;
   console.log(orderId);
+  $("button").show();
 });
 });
 
