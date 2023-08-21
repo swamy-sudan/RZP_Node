@@ -1,14 +1,15 @@
 'use strict'
 
 const express = require('express')
+var { validatePaymentVerification, validateWebhookSignature } = require('./node_modules/razorpay/dist/utils/razorpay-utils');
 const app = express()
 const port = 3000
 const bodyparser = require("body-parser");
 const Razorpay = require('razorpay')
 app.use(require("body-parser").json());
 var instance = new Razorpay({
-    key_id: 'rzp_test_oJPbj9rC1rDGAQ',
-    key_secret: 'uTYMtv9W0t6RalA0WTvO4WaE'
+    key_id: 'rzp_test_XdJDhOPkI5fDJc',
+    key_secret: '6Gu7IbFgilFjdoljKNvD5vIq'
   })
 
 app.get('/', (req, res) => {
@@ -43,23 +44,22 @@ app.post('/create/orderId', (req, res) => {
 
 
 app.post("/api/payment/verify",(req,res)=>{
+      var razorpayOrderId = req.body.response.razorpay_order_id;
+      var razorpayPaymentId = req.body.response.razorpay_payment_id;
+     var signature = req.body.response.razorpay_signature;
+     var secret = "6Gu7IbFgilFjdoljKNvD5vIq";
 
- let body=req.body.response.razorpay_order_id + "|" + req.body.response.razorpay_payment_id;
+     var response = {"signatureIsValid":"false"}
 
-  var crypto = require("crypto");
-  var expectedSignature = crypto.createHmac('sha256', 'uTYMtv9W0t6RalA0WTvO4WaE')
-                                  .update(body.toString())
-                                  .digest('hex');
-                                  console.log("sig recieved " ,req.body.response.razorpay_signature);
-                                  console.log("sig generated " ,expectedSignature);
-  var response = {"signatureIsValid":"false"}
-  if(expectedSignature === req.body.response.razorpay_signature)
-   response={"signatureIsValid":"true"}
-      res.send(response);
+     if(validatePaymentVerification({"order_id": razorpayOrderId, "payment_id": razorpayPaymentId }, signature, secret)){
+      response={"signatureIsValid":"true"}
+     }
+
+
+
+     res.send(response);
   });
 
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
-
-
