@@ -8,8 +8,8 @@ const bodyparser = require("body-parser");
 const Razorpay = require('razorpay')
 app.use(require("body-parser").json());
 var instance = new Razorpay({
-    key_id: 'rzp_test_XdJDhOPkI5fDJc',
-    key_secret: '6Gu7IbFgilFjdoljKNvD5vIq'
+    key_id: '<Key_ID',
+    key_secret: '<Secret>'
   })
 
 app.get('/', (req, res) => {
